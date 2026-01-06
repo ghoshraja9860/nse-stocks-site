@@ -43,47 +43,46 @@
 
   <script>
     async function loadCSV() {
-      // Use raw GitHub URL for CSV
-      const response = await fetch('https://raw.githubusercontent.com/ghoshraja9860/nse-stocks-site/main/stocks.csv');
-      const text = await response.text();
-      const rows = text.trim().split('\n').slice(1); // skip header
+      try {
+        const response = await fetch('https://raw.githubusercontent.com/ghoshraja9860/nse-stocks-site/main/stocks.csv');
+        const text = await response.text();
+        const rows = text.trim().split('\n').slice(1); // skip header
 
-      const tbody = document.querySelector("#stocksTable tbody");
-      const filterSelect = document.getElementById("filter");
+        const tbody = document.querySelector("#stocksTable tbody");
+        const filterSelect = document.getElementById("filter");
 
-      function render(filter) {
-        tbody.innerHTML = "";
-        rows.forEach(row => {
-          const cols = row.split(',');
-          if (cols.length < 9) return; // skip bad rows
+        function render(filter) {
+          tbody.innerHTML = "";
+          rows.forEach(row => {
+            const cols = row.split(',');
+            if (cols.length < 9) return; // skip bad rows
 
-          // Extract values
-          const [stock, mRSI, wRSI, dRSI, daily, weekly, monthly, threeMonth, universe] = cols.map(c => c.trim());
+            const [stock, mRSI, wRSI, dRSI, daily, weekly, monthly, threeMonth, universe] = cols.map(c => c.trim());
 
-          // Auto-calc MWD RSI
-          const mwdRSI = ((parseFloat(mRSI) + parseFloat(wRSI) + parseFloat(dRSI)) / 3).toFixed(1);
+            // Auto-calc MWD RSI
+            const mwdRSI = ((parseFloat(mRSI) + parseFloat(wRSI) + parseFloat(dRSI)) / 3).toFixed(1);
 
-          // Filter by universe
-          if (filter !== "all" && universe !== filter) return;
+            if (filter !== "all" && universe !== filter) return;
 
-          // Signal logic
-          let signalClass, signalText;
-          if (parseFloat(mwdRSI) > 60) { signalClass="bullish"; signalText="Bullish"; }
-          else if (parseFloat(mwdRSI) < 40) { signalClass="bearish"; signalText="Bearish"; }
-          else { signalClass="sideways"; signalText="Sideways"; }
+            let signalClass, signalText;
+            if (parseFloat(mwdRSI) > 60) { signalClass="bullish"; signalText="Bullish"; }
+            else if (parseFloat(mwdRSI) < 40) { signalClass="bearish"; signalText="Bearish"; }
+            else { signalClass="sideways"; signalText="Sideways"; }
 
-          // Build row
-          const tr = `<tr>
-            <td>${stock}</td><td>${mRSI}</td><td>${wRSI}</td><td>${dRSI}</td>
-            <td>${mwdRSI}</td><td class="${signalClass}">${signalText}</td>
-            <td>${daily}%</td><td>${weekly}%</td><td>${monthly}%</td><td>${threeMonth}%</td>
-          </tr>`;
-          tbody.innerHTML += tr;
-        });
+            const tr = `<tr>
+              <td>${stock}</td><td>${mRSI}</td><td>${wRSI}</td><td>${dRSI}</td>
+              <td>${mwdRSI}</td><td class="${signalClass}">${signalText}</td>
+              <td>${daily}%</td><td>${weekly}%</td><td>${monthly}%</td><td>${threeMonth}%</td>
+            </tr>`;
+            tbody.innerHTML += tr;
+          });
+        }
+
+        filterSelect.addEventListener("change", () => render(filterSelect.value));
+        render("all");
+      } catch (err) {
+        console.error("Error loading CSV:", err);
       }
-
-      filterSelect.addEventListener("change", () => render(filterSelect.value));
-      render("all");
     }
 
     loadCSV();
