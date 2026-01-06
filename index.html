@@ -1,110 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>NSE Stock Screener</title>
-  <style>
-    body { font-family: Arial; padding: 20px; }
-    .controls { margin-bottom: 20px; }
-    .stock-card {
-      width: 220px;
-      margin: 10px;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      transition: transform 0.2s;
-      cursor: pointer;
-      display: inline-block;
-      vertical-align: top;
-    }
-    .stock-card:hover { transform: scale(1.03); }
-    .bullish { background: linear-gradient(to bottom right, #d4fdd4, #b2f2b2); border-left: 6px solid green; }
-    .bearish { background: linear-gradient(to bottom right, #ffd6d6, #ffb3b3); border-left: 6px solid red; }
-    .sideways { background: linear-gradient(to bottom right, #fff3c2, #ffe999); border-left: 6px solid orange; }
-    .stock-card h3 { margin: 0 0 8px; }
-    .details { display: none; margin-top: 10px; font-size: 14px; }
-    .details p { margin: 4px 0; }
-  </style>
-</head>
-<body>
-  <h1>NSE Stock trend</h1>
+<script>
+  async function loadCSV() {
+    const response = await fetch('https://raw.githubusercontent.com/ghoshraja9860/nse-stocks-site/main/Rsi.csv');
+    const text = await response.text();
+    const rows = text.trim().split('\n').slice(1);
 
-  <div class="controls">
-    <label for="filter">Universe:</label>
-    <select id="filter">
-      <option value="all">All Stocks</option>
-      <option value="nifty50">Nifty 50</option>
-      <option value="nifty200">Nifty 200</option>
-      <option value="nifty500">Nifty 500</option>
-    </select>
+    const container = document.getElementById("stocksContainer");
+    const filterSelect = document.getElementById("filter");
+    const signalSelect = document.getElementById("signal");
 
-    <label for="signal">Signal:</label>
-    <select id="signal">
-      <option value="all">All</option>
-      <option value="bullish">Bullish</option>
-      <option value="bearish">Bearish</option>
-      <option value="sideways">Sideways</option>
-    </select>
-  </div>
+    function render(universeFilter, signalFilter) {
+      container.innerHTML = "";
+      rows.forEach(row => {
+        const cols = row.split(',');
+        if (cols.length < 13) return;
 
-  <div id="stocksContainer"></div>
+        // Map to your CSV columns
+        const [
+          date, symbol, stocks, cmp,
+          dRSI, wRSI, mRSI,
+          universe, ema20, ema50,
+          dailyChange, weeklyChange, monthlyChange
+        ] = cols.map(c => c.replace(/"/g,'').trim());
 
-  <script>
-    async function loadCSV() {
-      const response = await fetch('https://raw.githubusercontent.com/ghoshraja9860/nse-stocks-site/main/Rsi.csv');
-      const text = await response.text();
-      const rows = text.trim().split('\n').slice(1);
+        const mwdRSI = ((parseFloat(mRSI) + parseFloat(wRSI) + parseFloat(dRSI)) / 3).toFixed(1);
 
-      const container = document.getElementById("stocksContainer");
-      const filterSelect = document.getElementById("filter");
-      const signalSelect = document.getElementById("signal");
+        let signalClass, signalText;
+        if (parseFloat(mwdRSI) > 60) { signalClass="bullish"; signalText="Bullish"; }
+        else if (parseFloat(mwdRSI) < 40) { signalClass="bearish"; signalText="Bearish"; }
+        else { signalClass="sideways"; signalText="Sideways"; }
 
-      function render(universeFilter, signalFilter) {
-        container.innerHTML = "";
-        rows.forEach(row => {
-          const cols = row.split(',');
-          if (cols.length < 9) return;
+        if (universeFilter !== "all" && universe !== universeFilter) return;
+        if (signalFilter !== "all" && signalClass !== signalFilter) return;
 
-          const [stock, mRSI, wRSI, dRSI, daily, weekly, monthly, threeMonth, universe] = cols.map(c => c.trim());
-          const mwdRSI = ((parseFloat(mRSI) + parseFloat(wRSI) + parseFloat(dRSI)) / 3).toFixed(1);
-
-          let signalClass, signalText;
-          if (parseFloat(mwdRSI) > 60) { signalClass="bullish"; signalText="Bullish"; }
-          else if (parseFloat(mwdRSI) < 40) { signalClass="bearish"; signalText="Bearish"; }
-          else { signalClass="sideways"; signalText="Sideways"; }
-
-          if (universeFilter !== "all" && universe !== universeFilter) return;
-          if (signalFilter !== "all" && signalClass !== signalFilter) return;
-
-          const card = document.createElement("div");
-          card.className = `stock-card ${signalClass}`;
-          card.innerHTML = `
-            <h3>${stock}</h3>
-            <p><strong>${signalText}</strong> | MWD RSI: ${mwdRSI}</p>
-            <div class="details">
-              <p>Monthly RSI: ${mRSI}</p>
-              <p>Weekly RSI: ${wRSI}</p>
-              <p>Daily RSI: ${dRSI}</p>
-              <p>% Daily: ${daily}%</p>
-              <p>% Weekly: ${weekly}%</p>
-              <p>% Monthly: ${monthly}%</p>
-              <p>% 3-Month: ${threeMonth}%</p>
-            </div>
-          `;
-          card.addEventListener("click", () => {
-            const details = card.querySelector(".details");
-            details.style.display = details.style.display === "none" ? "block" : "none";
-          });
-          container.appendChild(card);
+        const card = document.createElement("div");
+        card.className = `stock-card ${signalClass}`;
+        card.innerHTML = `
+          <h3>${symbol}</h3>
+          <p><strong>${signalText}</strong> | MWD RSI: ${mwdRSI}</p>
+          <div class="details">
+            <p>Date: ${date}</p>
+            <p>Stock: ${stocks}</p>
+            <p>Cmp: ${cmp}</p>
+            <p>Monthly RSI: ${mRSI}</p>
+            <p>Weekly RSI: ${wRSI}</p>
+            <p>Daily RSI: ${dRSI}</p>
+            <p>% Daily: ${dailyChange}%</p>
+            <p>% Weekly: ${weeklyChange}%</p>
+            <p>% Monthly: ${monthlyChange}%</p>
+            <p>Sector: ${universe}</p>
+            <p>EMA20: ${ema20}</p>
+            <p>EMA50: ${ema50}</p>
+          </div>
+        `;
+        card.addEventListener("click", () => {
+          const details = card.querySelector(".details");
+          details.style.display = details.style.display === "none" ? "block" : "none";
         });
-      }
-
-      filterSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
-      signalSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
-      render("all", "all");
+        container.appendChild(card);
+      });
     }
 
-    loadCSV();
-  </script>
-</body>
-</html>
+    filterSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
+    signalSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
+    render("all", "all");
+  }
+
+  loadCSV();
+</script>
