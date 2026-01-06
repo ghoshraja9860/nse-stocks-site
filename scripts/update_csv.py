@@ -7,9 +7,17 @@ from datetime import datetime
 url = "https://chartink.com/screener/process"
 
 # Replace this with your screener's actual scan_clause.
-# You can copy it from the "Scan Criteria" section when you open or clone your screener.
+# Copy it from the "Scan Criteria" section of your RSI Strategy Agni screener.
 payload = {
-    "scan_clause": "( {cash} ( latest rsi(14) > 60 ) )"  # <-- replace with your RSI Strategy Agni criteria
+    "scan_clause": """
+    ( {cash} (
+        monthly rsi(14) >= 60 and monthly rsi(14) < 80
+        and weekly rsi(14) >= 60 and weekly rsi(14) < 80
+        and latest rsi(14) >= 50 and latest rsi(14) < 60
+        and latest ema(close,20) > latest ema(close,50)
+        and latest close >= 100
+    ) )
+    """
 }
 
 headers = {
@@ -50,3 +58,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
