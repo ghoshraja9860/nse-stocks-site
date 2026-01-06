@@ -61,6 +61,8 @@
       font-size: 13px;
     }
     .tradingview-link:hover { background: #007acc; }
+    .details { display: none; margin-top: 10px; font-size: 13px; }
+    .details p { margin: 3px 0; }
   </style>
 </head>
 <body>
@@ -152,7 +154,17 @@
             <a class="tradingview-link" href="https://www.tradingview.com/symbols/NSE-${symbol}/" target="_blank">
               View on TradingView
             </a>
+            <div class="details">
+              <p>Daily RSI: ${dRSI}</p>
+              <p>Weekly RSI: ${wRSI}</p>
+              <p>Monthly RSI: ${mRSI}</p>
+              <p>MWD RSI: ${mwdRSI}</p>
+            </div>
           `;
+          card.addEventListener("click", () => {
+            const details = card.querySelector(".details");
+            details.style.display = details.style.display === "none" ? "block" : "none";
+          });
           container.appendChild(card);
         });
 
