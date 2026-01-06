@@ -6,12 +6,24 @@
   <style>
     body { font-family: Arial; padding: 20px; }
     .controls { margin-bottom: 20px; }
-    .stock-box { border-radius: 8px; padding: 12px; margin: 10px; width: 250px; display: inline-block; vertical-align: top; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-    .bullish { background-color: #e0f7e9; border-left: 6px solid green; }
-    .bearish { background-color: #fdecea; border-left: 6px solid red; }
-    .sideways { background-color: #fff8e1; border-left: 6px solid orange; }
-    .stock-box h3 { margin: 0 0 8px; }
-    .stock-box p { margin: 4px 0; font-size: 14px; }
+    .stock-card {
+      width: 220px;
+      margin: 10px;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+      cursor: pointer;
+      display: inline-block;
+      vertical-align: top;
+    }
+    .stock-card:hover { transform: scale(1.03); }
+    .bullish { background: linear-gradient(to bottom right, #d4fdd4, #b2f2b2); border-left: 6px solid green; }
+    .bearish { background: linear-gradient(to bottom right, #ffd6d6, #ffb3b3); border-left: 6px solid red; }
+    .sideways { background: linear-gradient(to bottom right, #fff3c2, #ffe999); border-left: 6px solid orange; }
+    .stock-card h3 { margin: 0 0 8px; }
+    .details { display: none; margin-top: 10px; font-size: 14px; }
+    .details p { margin: 4px 0; }
   </style>
 </head>
 <body>
@@ -64,21 +76,26 @@
           if (universeFilter !== "all" && universe !== universeFilter) return;
           if (signalFilter !== "all" && signalClass !== signalFilter) return;
 
-          const box = document.createElement("div");
-          box.className = `stock-box ${signalClass}`;
-          box.innerHTML = `
+          const card = document.createElement("div");
+          card.className = `stock-card ${signalClass}`;
+          card.innerHTML = `
             <h3>${stock}</h3>
-            <p><strong>Signal:</strong> ${signalText}</p>
-            <p><strong>MWD RSI:</strong> ${mwdRSI}</p>
-            <p>Monthly RSI: ${mRSI}</p>
-            <p>Weekly RSI: ${wRSI}</p>
-            <p>Daily RSI: ${dRSI}</p>
-            <p>% Daily: ${daily}%</p>
-            <p>% Weekly: ${weekly}%</p>
-            <p>% Monthly: ${monthly}%</p>
-            <p>% 3-Month: ${threeMonth}%</p>
+            <p><strong>${signalText}</strong> | MWD RSI: ${mwdRSI}</p>
+            <div class="details">
+              <p>Monthly RSI: ${mRSI}</p>
+              <p>Weekly RSI: ${wRSI}</p>
+              <p>Daily RSI: ${dRSI}</p>
+              <p>% Daily: ${daily}%</p>
+              <p>% Weekly: ${weekly}%</p>
+              <p>% Monthly: ${monthly}%</p>
+              <p>% 3-Month: ${threeMonth}%</p>
+            </div>
           `;
-          container.appendChild(box);
+          card.addEventListener("click", () => {
+            const details = card.querySelector(".details");
+            details.style.display = details.style.display === "none" ? "block" : "none";
+          });
+          container.appendChild(card);
         });
       }
 
