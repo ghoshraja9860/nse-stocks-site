@@ -149,13 +149,14 @@
               <p>Daily RSI: ${dRSI}</p>
               <p>Weekly RSI: ${wRSI}</p>
               <p>Monthly RSI: ${mRSI}</p>
-              <div id="chart_${symbol}"></div>
+              <a class="tradingview-link" href="https://www.tradingview.com/symbols/NSE-${symbol}/" target="_blank">
+                Open Full Chart
+              </a>
             </div>
           `;
           card.addEventListener("click", () => {
             const details = card.querySelector(".details");
-            const chartDiv = card.querySelector(`#chart_${symbol}`);
-            const alreadyLoaded = chartDiv.getAttribute("data-loaded");
+            
 
             details.style.display = details.style.display === "none" ? "block" : "none";
 
