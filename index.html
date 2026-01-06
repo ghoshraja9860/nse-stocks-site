@@ -46,17 +46,8 @@
     .sideways { background: linear-gradient(to bottom right, #fff3c2, #ffe999); border-left: 6px solid orange; }
     .stock-card h3 { margin: 0 0 8px; }
     .stock-card p { margin: 4px 0; font-size: 14px; }
-    .tradingview-link {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 6px 10px;
-      background: #004d99;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-size: 13px;
-    }
-    .tradingview-link:hover { background: #007acc; }
+    .details { display: none; margin-top: 10px; font-size: 13px; }
+    .details p { margin: 3px 0; }
     .positive { color: green; }
     .negative { color: red; }
   </style>
@@ -107,6 +98,7 @@
   <div id="stocksContainer"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://s3.tradingview.com/tv.js"></script>
   <script>
     async function loadCSV() {
       const response = await fetch('https://raw.githubusercontent.com/ghoshraja9860/nse-stocks-site/main/Rsi.csv');
@@ -147,30 +139,58 @@
           card.className = `stock-card ${signalClass}`;
           card.innerHTML = `
             <h3>${symbol}</h3>
-            <p><strong>${signalText}</strong></p>
             <p>Sector: ${sector}</p>
-            <p>CMP: ${cmp}</p>
-            <p>% Latest Change: ${formatChange(latestChange)}</p>
-            <p>% Weekly Change: ${formatChange(weeklyChange)}</p>
-            <p>% Monthly Change: ${formatChange(monthlyChange)}</p>
-            <p>Daily RSI: ${dRSI}</p>
-            <p>Weekly RSI: ${wRSI}</p>
-            <p>Monthly RSI: ${mRSI}</p>
-            <a class="tradingview-link" href="https://www.tradingview.com/symbols/NSE-${symbol}/" target="_blank">
-              View on TradingView
-            </a>
+            <p><strong>${signalText}</strong></p>
+            <div class="details" style="display:none;">
+              <p>CMP: ${cmp}</p>
+              <p>% Latest Change: ${formatChange(latestChange)}</p>
+              <p>% Weekly Change: ${formatChange(weeklyChange)}</p>
+              <p>% Monthly Change: ${formatChange(monthlyChange)}</p>
+              <p>Daily RSI: ${dRSI}</p>
+              <p>Weekly RSI: ${wRSI}</p>
+              <p>Monthly RSI: ${mRSI}</p>
+              <div id="chart_${symbol}"></div>
+            </div>
           `;
+          card.addEventListener("click", () => {
+            const details = card.querySelector(".details");
+            const chartDiv = card.querySelector(`#chart_${symbol}`);
+            const alreadyLoaded = chartDiv.getAttribute("data-loaded");
+
+            details.style.display = details.style.display === "none" ? "block" : "none";
+
+            if (!alreadyLoaded && details.style.display === "block") {
+              new TradingView.widget({
+                width: 240,
+                height: 200,
+                symbol: "NSE:" + symbol,
+                interval: "D",
+                timezone: "Asia/Kolkata",
+                theme: "light",
+                style: "1",
+                locale: "en",
+                hide_top_toolbar: true,
+                hide_legend: true,
+                container_id: "chart_" + symbol
+              });
+              chartDiv.setAttribute("data-loaded", "true");
+            }
+          });
           container.appendChild(card);
         });
 
         summaryDiv.textContent = `Bullish: ${bullishCount} | Bearish: ${bearishCount} | Sideways: ${sidewaysCount}`;
       }
 
+      // attach filter listeners
       filterSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
       signalSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
+
+      // initial render
       render("all", "all");
     }
 
+    // run loader
     loadCSV();
   </script>
 </body>
