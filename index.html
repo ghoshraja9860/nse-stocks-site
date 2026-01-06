@@ -167,6 +167,9 @@
               <p>% Daily Change: ${formatChange(dailyChange)}</p>
               <p>% Weekly Change: ${formatChange(weeklyChange)}</p>
               <p>% Monthly Change: ${formatChange(monthlyChange)}</p>
+              <p>Daily RSI: ${dRSI}</p>
+              <p>Weekly RSI: ${wRSI}</p>
+              <p>Monthly RSI: ${mRSI}</p>
             </div>
           `;
           card.addEventListener("click", () => {
@@ -182,10 +185,3 @@
 
       filterSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
       signalSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
-      render("all", "all");
-    }
-
-    loadCSV();
-  </script>
-</body>
-</html>
