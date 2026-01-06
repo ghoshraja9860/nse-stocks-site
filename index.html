@@ -160,23 +160,9 @@
 
             details.style.display = details.style.display === "none" ? "block" : "none";
 
-            if (!alreadyLoaded && details.style.display === "block") {
-              new TradingView.widget({
-                width: 240,
-                height: 200,
-                symbol: "NSE:" + symbol,
-                interval: "D",
-                timezone: "Asia/Kolkata",
-                theme: "light",
-                style: "1",
-                locale: "en",
-                hide_top_toolbar: true,
-                hide_legend: true,
-                container_id: "chart_" + symbol
+            
               });
-              chartDiv.setAttribute("data-loaded", "true");
-            }
-          });
+              
           container.appendChild(card);
         });
 
