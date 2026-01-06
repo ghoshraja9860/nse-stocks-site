@@ -22,10 +22,7 @@
     .bearish { background: linear-gradient(to bottom right, #ffd6d6, #ffb3b3); border-left: 6px solid red; }
     .sideways { background: linear-gradient(to bottom right, #fff3c2, #ffe999); border-left: 6px solid orange; }
     .stock-card h3 { margin: 0 0 8px; }
-    .details { display: none; margin-top: 10px; font-size: 14px; }
-    .details p { margin: 4px 0; }
-    .positive { color: green; }
-    .negative { color: red; }
+    .stock-card p { margin: 4px 0; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -78,12 +75,7 @@
           const cols = row.split(',').map(c => c.replace(/(^"|"$)/g,'').trim());
           if (cols.length < 13) return;
 
-          const [
-            date, symbol, stocks, cmp,
-            dRSI, wRSI, mRSI,
-            sector, ema20, ema50,
-            dailyChange, weeklyChange, monthlyChange
-          ] = cols;
+          const [, symbol, , , dRSI, wRSI, mRSI, sector] = cols;
 
           const mwdRSI = ((parseFloat(mRSI) + parseFloat(wRSI) + parseFloat(dRSI)) / 3).toFixed(1);
 
@@ -95,36 +87,13 @@
           if (sectorFilter !== "all" && sector.toLowerCase() !== sectorFilter.toLowerCase()) return;
           if (signalFilter !== "all" && signalClass !== signalFilter) return;
 
-          function formatChange(val) {
-            const num = parseFloat(val);
-            if (isNaN(num)) return val;
-            return `<span class="${num >= 0 ? 'positive' : 'negative'}">${num}%</span>`;
-          }
-
           const card = document.createElement("div");
           card.className = `stock-card ${signalClass}`;
           card.innerHTML = `
             <h3>${symbol}</h3>
-            <p><strong>${signalText}</strong> | MWD RSI: ${mwdRSI}</p>
-            <div class="details">
-              <p>Date: ${date}</p>
-              <p>Stock: ${stocks}</p>
-              <p>Cmp: ${cmp}</p>
-              <p>Monthly RSI: ${mRSI}</p>
-              <p>Weekly RSI: ${wRSI}</p>
-              <p>Daily RSI: ${dRSI}</p>
-              <p>% Daily: ${formatChange(dailyChange)}</p>
-              <p>% Weekly: ${formatChange(weeklyChange)}</p>
-              <p>% Monthly: ${formatChange(monthlyChange)}</p>
-              <p>Sector: ${sector}</p>
-              <p>EMA20: ${ema20}</p>
-              <p>EMA50: ${ema50}</p>
-            </div>
+            <p><strong>${signalText}</strong></p>
+            <p>Sector: ${sector}</p>
           `;
-          card.addEventListener("click", () => {
-            const details = card.querySelector(".details");
-            details.style.display = details.style.display === "none" ? "block" : "none";
-          });
           container.appendChild(card);
         });
       }
