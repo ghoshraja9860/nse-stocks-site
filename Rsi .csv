@@ -1,4 +1,4 @@
-﻿Date,Symbol,Stocks,Cmp,Drsi,Wrsi,Mrsi,Sector,Ema20,Ema50,Latest change,Weekly change ,Monthly change
+﻿Date,Symbol,Stocks,cmp,drsi,wrsi,mrsi,sector,ema20,ema50,daily change,Weekly change ,Monthly change
 "6th Jan","EIEL","EIEL","200.86","41.39","39.76","49.18","realty","205.28","214.92","-0.913","-2.85","-2.45"
 "6th Jan","NTPCGREEN","NTPCGREEN","93.95","50.57","42.03","33.84","power & utilities","93.66","95.11","-2.15","-3.25","-0.635"
 "6th Jan","BLACKBUCK","BLACKBUCK","684.50","57.92","60.25","80.55","transportation","666.08","656.14","-1.97","-2.09","0.699"
@@ -49,3 +49,4 @@
 "6th Jan","MUTHOOTMF","MUTHOOTMF","185.35","58.77","58.74","47.06","financials","178.21","175.72","-1.40","5.09","4.93"
 "6th Jan","INOXINDIA","INOXINDIA","1139.70","51.23","48.32","57.27","industrials","1129.98","1149.31","1.46","0.787","0.494"
 "6th Jan","DOMS","DOMS","2641.70","58.46","54.74","66.90","miscellaneous","2589.02","2563.54","-0.748","-1.20","1.01"
+
