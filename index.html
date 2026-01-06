@@ -114,26 +114,33 @@
       function render(sectorFilter, signalFilter) {
         container.innerHTML = "";
         let bullishCount = 0, bearishCount = 0, sidewaysCount = 0;
-
         rows.forEach(row => {
-          const { symbol, cmp, dRSI, wRSI, mRSI, sector, latestChange, weeklyChange, monthlyChange } = row;
-          if (!symbol) return;
+         const { symbol, cmp, dRSI, wRSI, mRSI, sector, latestChange, weeklyChange, monthlyChange } = row;
+         if (!symbol) return;
 
-          const avgRSI = ((parseFloat(mRSI) + parseFloat(wRSI) + parseFloat(dRSI)) / 3).toFixed(1);
+         let signalClass, signalText;
 
-          let signalClass, signalText;
-          if (parseFloat(avgRSI) > 60) { signalClass="bullish"; signalText="Bullish"; bullishCount++; }
-          else if (parseFloat(avgRSI) < 40) { signalClass="bearish"; signalText="Bearish"; bearishCount++; }
-          else { signalClass="sideways"; signalText="Sideways"; sidewaysCount++; }
+         if (parseFloat(mRSI) > 60 && parseFloat(wRSI) > 60 && parseFloat(dRSI) > 60) {
+          signalClass = "bullish";
+          signalText = "Bullish";
+          bullishCount++;
+         } else if (parseFloat(mRSI) < 40 && parseFloat(wRSI) < 40 && parseFloat(dRSI) < 40) {
+          signalClass = "bearish";
+          signalText = "Bearish";
+          bearishCount++;
+        } else {
+          signalClass = "sideways";
+          signalText = "Sideways";
+          sidewaysCount++;
+        }
 
-          if (sectorFilter !== "all" && sector.toLowerCase() !== sectorFilter.toLowerCase()) return;
-          if (signalFilter !== "all" && signalClass !== signalFilter) return;
+        if (sectorFilter !== "all" && sector.toLowerCase() !== sectorFilter.toLowerCase()) return;
+        if (signalFilter !== "all" && signalClass !== signalFilter) return;
 
-          function formatChange(val) {
-            const num = parseFloat(val);
-            if (isNaN(num)) return val;
-            return `<span class="${num >= 0 ? 'positive' : 'negative'}">${num}%</span>`;
-          }
+  // ... rest of card creation logic
+     });
+
+        
 
           const card = document.createElement("div");
           card.className = `stock-card ${signalClass}`;
