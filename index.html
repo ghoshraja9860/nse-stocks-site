@@ -1,71 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>NSE Stock Screener</title>
-  <style>
-    body { font-family: Arial; padding: 20px; }
-    .bullish { color: green; font-weight: bold; }
-    .bearish { color: red; font-weight: bold; }
-    .sideways { color: orange; font-weight: bold; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-  </style>
-</head>
-<body>
-  <h1>NSE Stock Screener (MWD RSI)</h1>
-  <table id="stocksTable">
-    <thead>
-      <tr>
-        <th>Stock</th>
-        <th>Monthly RSI</th>
-        <th>Weekly RSI</th>
-        <th>Daily RSI</th>
-        <th>MWD RSI</th>
-        <th>Signal</th>
-        <th>% Daily</th>
-        <th>% Weekly</th>
-        <th>% Monthly</th>
-        <th>% 3-Month</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+<label for="filter">Filter:</label>
+<select id="filter">
+  <option value="all">All Stocks</option>
+  <option value="nifty50">Nifty 50</option>
+  <option value="nifty200">Nifty 200</option>
+  <option value="nifty500">Nifty 500</option>
+</select>
 
-  <script>
-    async function loadCSV() {
-      const response = await fetch('stocks.csv');
-      const text = await response.text();
-      const rows = text.trim().split('\n').slice(1); // skip header
+<table id="stocksTable"> ... </table>
 
-      const tbody = document.querySelector("#stocksTable tbody");
-      rows.forEach(row => {
-        const [stock, mRSI, wRSI, dRSI, mwdRSI, daily, weekly, monthly, threeMonth] = row.split(',');
-        let signalClass, signalText;
-        if (parseFloat(mwdRSI) > 60) {
-          signalClass = "bullish"; signalText = "Bullish";
-        } else if (parseFloat(mwdRSI) < 40) {
-          signalClass = "bearish"; signalText = "Bearish";
-        } else {
-          signalClass = "sideways"; signalText = "Sideways";
-        }
+<script>
+async function loadCSV() {
+  const response = await fetch('stocks.csv');
+  const text = await response.text();
+  const rows = text.trim().split('\n').slice(1);
 
-        const tr = `<tr>
-          <td>${stock}</td>
-          <td>${mRSI}</td>
-          <td>${wRSI}</td>
-          <td>${dRSI}</td>
-          <td>${mwdRSI}</td>
-          <td class="${signalClass}">${signalText}</td>
-          <td>${daily}%</td>
-          <td>${weekly}%</td>
-          <td>${monthly}%</td>
-          <td>${threeMonth}%</td>
-        </tr>`;
-        tbody.innerHTML += tr;
-      });
-    }
+  const tbody = document.querySelector("#stocksTable tbody");
+  const filterSelect = document.getElementById("filter");
 
-    loadCSV();
-  </script>
-</body>
-</html>
+  function render(filter) {
+    tbody.innerHTML = "";
+    rows.forEach(row => {
+      const [stock, mRSI, wRSI, dRSI, mwdRSI, daily, weekly, monthly, threeMonth, universe] = row.split(',');
+      if (filter !== "all" && universe !== filter) return;
+
+      let signalClass, signalText;
+      if (parseFloat(mwdRSI) > 60) { signalClass="bullish"; signalText="Bullish"; }
+      else if (parseFloat(mwdRSI) < 40) { signalClass="bearish"; signalText="Bearish"; }
+      else { signalClass="sideways"; signalText="Sideways"; }
+
+      const tr = `<tr>
+        <td>${stock}</td><td>${mRSI}</td><td>${wRSI}</td><td>${dRSI}</td>
+        <td>${mwdRSI}</td><td class="${signalClass}">${signalText}</td>
+        <td>${daily}%</td><td>${weekly}%</td><td>${monthly}%</td><td>${threeMonth}%</td>
+      </tr>`;
+      tbody.innerHTML += tr;
+    });
+  }
+
+  filterSelect.addEventListener("change", () => render(filterSelect.value));
+  render("all");
+}
+loadCSV();
+</script>
