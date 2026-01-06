@@ -180,3 +180,18 @@
         });
 
         summaryDiv.textContent = `Bullish: ${bullishCount} | Bearish: ${bearishCount} | Sideways: ${sidewaysCount}`;
+      }
+
+      // attach filter listeners
+      filterSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
+      signalSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
+
+      // initial render
+      render("all", "all");
+    }
+
+    // run loader
+    loadCSV();
+  </script>
+</body>
+</html>
