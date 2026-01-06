@@ -47,13 +47,16 @@
     .stock-card h3 { margin: 0 0 8px; }
     .stock-card p { margin: 4px 0; font-size: 14px; }
     .tradingview-link {
-      display: inline-block; margin-top: 8px; padding: 6px 10px;
-      background: #004d99; color: white; text-decoration: none;
-      border-radius: 5px; font-size: 13px;
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 10px;
+      background: #004d99;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 13px;
     }
     .tradingview-link:hover { background: #007acc; }
-    .details { display: none; margin-top: 10px; font-size: 13px; }
-    .details p { margin: 3px 0; }
     .positive { color: green; }
     .negative { color: red; }
   </style>
@@ -144,25 +147,19 @@
           card.className = `stock-card ${signalClass}`;
           card.innerHTML = `
             <h3>${symbol}</h3>
-            <p>Sector: ${sector}</p>
             <p><strong>${signalText}</strong></p>
-            <div class="details">
-              <p>CMP: ${cmp}</p>
-              <p>% Latest Change: ${formatChange(latestChange)}</p>
-              <p>% Weekly Change: ${formatChange(weeklyChange)}</p>
-              <p>% Monthly Change: ${formatChange(monthlyChange)}</p>
-              <p>Daily RSI: ${dRSI}</p>
-              <p>Weekly RSI: ${wRSI}</p>
-              <p>Monthly RSI: ${mRSI}</p>
-              <a class="tradingview-link" href="https://www.tradingview.com/symbols/NSE-${symbol}/" target="_blank">
-                View on TradingView
-              </a>
-            </div>
+            <p>Sector: ${sector}</p>
+            <p>CMP: ${cmp}</p>
+            <p>% Latest Change: ${formatChange(latestChange)}</p>
+            <p>% Weekly Change: ${formatChange(weeklyChange)}</p>
+            <p>% Monthly Change: ${formatChange(monthlyChange)}</p>
+            <p>Daily RSI: ${dRSI}</p>
+            <p>Weekly RSI: ${wRSI}</p>
+            <p>Monthly RSI: ${mRSI}</p>
+            <a class="tradingview-link" href="https://www.tradingview.com/symbols/NSE-${symbol}/" target="_blank">
+              View on TradingView
+            </a>
           `;
-          card.addEventListener("click", () => {
-            const details = card.querySelector(".details");
-            details.style.display = details.style.display === "none" ? "block" : "none";
-          });
           container.appendChild(card);
         });
 
@@ -175,4 +172,6 @@
     }
 
     loadCSV();
-  </
+  </script>
+</body>
+</html>
