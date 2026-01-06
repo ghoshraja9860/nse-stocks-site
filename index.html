@@ -43,7 +43,12 @@
       <option value="auto">Auto</option>
       <option value="fmcg">FMCG</option>
       <option value="miscellaneous">Miscellaneous</option>
-      <!-- add more sectors as needed -->
+      <option value="realty">Realty</option>
+      <option value="transportation">Transportation</option>
+      <option value="consumer discretionary">Consumer Discretionary</option>
+      <option value="metals & mining">Metals & Mining</option>
+      <option value="telecom-service">Telecom</option>
+      <option value="aerospace & defence">Aerospace & Defence</option>
     </select>
 
     <label for="signal">Signal:</label>
@@ -70,7 +75,7 @@
       function render(sectorFilter, signalFilter) {
         container.innerHTML = "";
         rows.forEach(row => {
-          const cols = row.split(',');
+          const cols = row.split(',').map(c => c.replace(/(^"|"$)/g,'').trim());
           if (cols.length < 13) return;
 
           const [
@@ -78,7 +83,7 @@
             dRSI, wRSI, mRSI,
             sector, ema20, ema50,
             dailyChange, weeklyChange, monthlyChange
-          ] = cols.map(c => c.replace(/"/g,'').trim());
+          ] = cols;
 
           const mwdRSI = ((parseFloat(mRSI) + parseFloat(wRSI) + parseFloat(dRSI)) / 3).toFixed(1);
 
