@@ -2,9 +2,9 @@ import requests
 import csv
 from datetime import datetime
 
-# Chartink public screener export link
-# Replace 414485 with your screener/dashboard ID
-url = "https://chartink.com/screener/download/414485"
+# Direct download link for your screener
+# Use the same link you get when you tap "Download CSV" on the screener page
+url = "https://chartink.com/screener/rsi-strategy-agni/download"
 
 def fetch_chartink():
     resp = requests.get(url, timeout=30)
