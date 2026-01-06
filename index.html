@@ -12,8 +12,27 @@
       text-align: center;
     }
     header h1 { margin: 0; font-size: 28px; }
-    header p { margin: 5px 0 0; font-size: 16px; }
+    header p { margin: 5px 0 10px; font-size: 16px; }
+    .banner-links { margin-top: 10px; }
+    .banner-links a {
+      display: inline-block;
+      margin: 5px;
+      padding: 8px 14px;
+      background: #fff;
+      color: #004d99;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      font-size: 14px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .banner-links a:hover { background: #004d99; color: #fff; }
     .controls { margin: 20px; }
+    .summary {
+      margin: 20px;
+      font-size: 16px;
+      font-weight: bold;
+    }
     .stock-card {
       width: 240px;
       margin: 10px;
@@ -47,8 +66,12 @@
 <body>
   <!-- Banner -->
   <header>
-    <h1>Trade With Agni(TechnoFunda Traders)</h1>
-    <p>Smart NSE Stock Screener | Trend Analysis | Powered by TradingView</p>
+    <h1>AGNI Trading Channel</h1>
+    <p>Smart NSE Stock Screener | RSI + Trend Analysis | Powered by TradingView</p>
+    <div class="banner-links">
+      <a href="https://www.youtube.com/@YourChannelName" target="_blank">📺 YouTube</a>
+      <a href="https://t.me/YourTelegramChannel" target="_blank">📢 Telegram</a>
+    </div>
   </header>
 
   <!-- Filters -->
@@ -81,6 +104,11 @@
     </select>
   </div>
 
+  <!-- Summary Counters -->
+  <div class="summary" id="summaryCounts">
+    Bullish: 0 | Bearish: 0 | Sideways: 0
+  </div>
+
   <!-- Stock Cards -->
   <div id="stocksContainer"></div>
 
@@ -93,9 +121,12 @@
       const container = document.getElementById("stocksContainer");
       const filterSelect = document.getElementById("filter");
       const signalSelect = document.getElementById("signal");
+      const summaryDiv = document.getElementById("summaryCounts");
 
       function render(sectorFilter, signalFilter) {
         container.innerHTML = "";
+        let bullishCount = 0, bearishCount = 0, sidewaysCount = 0;
+
         rows.forEach(row => {
           const cols = row.split(',').map(c => c.replace(/(^"|"$)/g,'').trim());
           if (cols.length < 13) return;
@@ -105,9 +136,9 @@
           const mwdRSI = ((parseFloat(mRSI) + parseFloat(wRSI) + parseFloat(dRSI)) / 3).toFixed(1);
 
           let signalClass, signalText;
-          if (parseFloat(mwdRSI) > 60) { signalClass="bullish"; signalText="Bullish"; }
-          else if (parseFloat(mwdRSI) < 40) { signalClass="bearish"; signalText="Bearish"; }
-          else { signalClass="sideways"; signalText="Sideways"; }
+          if (parseFloat(mwdRSI) > 60) { signalClass="bullish"; signalText="Bullish"; bullishCount++; }
+          else if (parseFloat(mwdRSI) < 40) { signalClass="bearish"; signalText="Bearish"; bearishCount++; }
+          else { signalClass="sideways"; signalText="Sideways"; sidewaysCount++; }
 
           if (sectorFilter !== "all" && sector.toLowerCase() !== sectorFilter.toLowerCase()) return;
           if (signalFilter !== "all" && signalClass !== signalFilter) return;
@@ -124,6 +155,9 @@
           `;
           container.appendChild(card);
         });
+
+        // Update summary counts
+        summaryDiv.textContent = `Bullish: ${bullishCount} | Bearish: ${bearishCount} | Sideways: ${sidewaysCount}`;
       }
 
       filterSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
