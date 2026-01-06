@@ -54,7 +54,6 @@
   </style>
 </head>
 <body>
-  <!-- Banner -->
   <header>
     <h1>AGNI Trading Channel</h1>
     <p>Smart NSE Stock Screener | RSI + Trend Analysis | Powered by TradingView</p>
@@ -64,7 +63,6 @@
     </div>
   </header>
 
-  <!-- Filters -->
   <div class="controls">
     <label for="filter">Sector:</label>
     <select id="filter">
@@ -94,12 +92,10 @@
     </select>
   </div>
 
-  <!-- Summary Counters -->
   <div class="summary" id="summaryCounts">
     Bullish: 0 | Bearish: 0 | Sideways: 0
   </div>
 
-  <!-- Stock Cards -->
   <div id="stocksContainer"></div>
 
   <script>
@@ -170,4 +166,8 @@
           container.appendChild(card);
         });
 
-        summaryDiv.textContent = `Bullish: ${bullishCount} | Bearish: ${bearishCount} | Side
+        summaryDiv.textContent = `Bullish: ${bullishCount} | Bearish: ${bearishCount} | Sideways: ${sidewaysCount}`;
+      }
+
+      filterSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
+      signalSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
