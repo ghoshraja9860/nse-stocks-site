@@ -28,21 +28,12 @@
     }
     .banner-links a:hover { background: #004d99; color: #fff; }
     .controls { margin: 20px; }
-    .summary {
-      margin: 20px;
-      font-size: 16px;
-      font-weight: bold;
-    }
+    .summary { margin: 20px; font-size: 16px; font-weight: bold; }
     .stock-card {
-      width: 240px;
-      margin: 10px;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      transition: transform 0.2s;
-      cursor: pointer;
-      display: inline-block;
-      vertical-align: top;
+      width: 240px; margin: 10px; padding: 15px;
+      border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: transform 0.2s; cursor: pointer;
+      display: inline-block; vertical-align: top;
     }
     .stock-card:hover { transform: scale(1.03); }
     .bullish { background: linear-gradient(to bottom right, #d4fdd4, #b2f2b2); border-left: 6px solid green; }
@@ -51,14 +42,9 @@
     .stock-card h3 { margin: 0 0 8px; }
     .stock-card p { margin: 4px 0; font-size: 14px; }
     .tradingview-link {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 6px 10px;
-      background: #004d99;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-size: 13px;
+      display: inline-block; margin-top: 8px; padding: 6px 10px;
+      background: #004d99; color: white; text-decoration: none;
+      border-radius: 5px; font-size: 13px;
     }
     .tradingview-link:hover { background: #007acc; }
     .details { display: none; margin-top: 10px; font-size: 13px; }
@@ -184,9 +170,4 @@
           container.appendChild(card);
         });
 
-        // Update summary counts
-        summaryDiv.textContent = `Bullish: ${bullishCount} | Bearish: ${bearishCount} | Sideways: ${sidewaysCount}`;
-      }
-
-      filterSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
-      signalSelect.addEventListener("
+        summaryDiv.textContent = `Bullish: ${bullishCount} | Bearish: ${bearishCount} | Side
