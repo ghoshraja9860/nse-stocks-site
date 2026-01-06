@@ -28,12 +28,21 @@
     }
     .banner-links a:hover { background: #004d99; color: #fff; }
     .controls { margin: 20px; }
-    .summary { margin: 20px; font-size: 16px; font-weight: bold; }
+    .summary {
+      margin: 20px;
+      font-size: 16px;
+      font-weight: bold;
+    }
     .stock-card {
-      width: 240px; margin: 10px; padding: 15px;
-      border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      transition: transform 0.2s; cursor: pointer;
-      display: inline-block; vertical-align: top;
+      width: 240px;
+      margin: 10px;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+      cursor: pointer;
+      display: inline-block;
+      vertical-align: top;
     }
     .stock-card:hover { transform: scale(1.03); }
     .bullish { background: linear-gradient(to bottom right, #d4fdd4, #b2f2b2); border-left: 6px solid green; }
@@ -42,27 +51,30 @@
     .stock-card h3 { margin: 0 0 8px; }
     .stock-card p { margin: 4px 0; font-size: 14px; }
     .tradingview-link {
-      display: inline-block; margin-top: 8px; padding: 6px 10px;
-      background: #004d99; color: white; text-decoration: none;
-      border-radius: 5px; font-size: 13px;
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 10px;
+      background: #004d99;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 13px;
     }
     .tradingview-link:hover { background: #007acc; }
-    .details { display: none; margin-top: 10px; font-size: 13px; }
-    .details p { margin: 3px 0; }
-    .positive { color: green; }
-    .negative { color: red; }
   </style>
 </head>
 <body>
+  <!-- Banner -->
   <header>
     <h1>AGNI Trading Channel</h1>
     <p>Smart NSE Stock Screener | RSI + Trend Analysis | Powered by TradingView</p>
     <div class="banner-links">
-      <a href="https://youtube.com/@technofundatraders?si=1WdULL8y4w4aMz73" target="_blank">📺 Join YouTube</a>
-      <a href="https://t.me/technofundatrader" target="_blank">📢 Join Telegram</a>
+      <a href="https://youtube.com/@technofundatraders?si=1WdULL8y4w4aMz73" target="_blank">📺 YouTube</a>
+      <a href="https://t.me/technofundatrader" target="_blank">📢 Telegram</a>
     </div>
   </header>
 
+  <!-- Filters -->
   <div class="controls">
     <label for="filter">Sector:</label>
     <select id="filter">
@@ -92,10 +104,12 @@
     </select>
   </div>
 
+  <!-- Summary Counters -->
   <div class="summary" id="summaryCounts">
     Bullish: 0 | Bearish: 0 | Sideways: 0
   </div>
 
+  <!-- Stock Cards -->
   <div id="stocksContainer"></div>
 
   <script>
@@ -117,28 +131,17 @@
           const cols = row.split(',').map(c => c.replace(/(^"|"$)/g,'').trim());
           if (cols.length < 13) return;
 
-          const [
-            date, symbol, stocks, cmp,
-            dRSI, wRSI, mRSI,
-            sector, ema20, ema50,
-            latestChange, weeklyChange, monthlyChange
-          ] = cols;
+          const [, symbol, , , dRSI, wRSI, mRSI, sector] = cols;
 
-          const avgRSI = ((parseFloat(mRSI) + parseFloat(wRSI) + parseFloat(dRSI)) / 3).toFixed(1);
+          const mwdRSI = ((parseFloat(mRSI) + parseFloat(wRSI) + parseFloat(dRSI)) / 3).toFixed(1);
 
           let signalClass, signalText;
-          if (parseFloat(avgRSI) > 60) { signalClass="bullish"; signalText="Bullish"; bullishCount++; }
-          else if (parseFloat(avgRSI) < 40) { signalClass="bearish"; signalText="Bearish"; bearishCount++; }
+          if (parseFloat(mwdRSI) > 60) { signalClass="bullish"; signalText="Bullish"; bullishCount++; }
+          else if (parseFloat(mwdRSI) < 40) { signalClass="bearish"; signalText="Bearish"; bearishCount++; }
           else { signalClass="sideways"; signalText="Sideways"; sidewaysCount++; }
 
           if (sectorFilter !== "all" && sector.toLowerCase() !== sectorFilter.toLowerCase()) return;
           if (signalFilter !== "all" && signalClass !== signalFilter) return;
-
-          function formatChange(val) {
-            const num = parseFloat(val);
-            if (isNaN(num)) return val;
-            return `<span class="${num >= 0 ? 'positive' : 'negative'}">${num}%</span>`;
-          }
 
           const card = document.createElement("div");
           card.className = `stock-card ${signalClass}`;
@@ -149,25 +152,20 @@
             <a class="tradingview-link" href="https://www.tradingview.com/symbols/NSE-${symbol}/" target="_blank">
               View on TradingView
             </a>
-            <div class="details">
-              <p>CMP: ${cmp}</p>
-              <p>% Latest Change: ${formatChange(latestChange)}</p>
-              <p>% Weekly Change: ${formatChange(weeklyChange)}</p>
-              <p>% Monthly Change: ${formatChange(monthlyChange)}</p>
-              <p>Daily RSI: ${dRSI}</p>
-              <p>Weekly RSI: ${wRSI}</p>
-              <p>Monthly RSI: ${mRSI}</p>
-            </div>
           `;
-          card.addEventListener("click", () => {
-            const details = card.querySelector(".details");
-            details.style.display = details.style.display === "none" ? "block" : "none";
-          });
           container.appendChild(card);
         });
 
+        // Update summary counts
         summaryDiv.textContent = `Bullish: ${bullishCount} | Bearish: ${bearishCount} | Sideways: ${sidewaysCount}`;
       }
 
       filterSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
       signalSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
+      render("all", "all");
+    }
+
+    loadCSV();
+  </script>
+</body>
+</html>
