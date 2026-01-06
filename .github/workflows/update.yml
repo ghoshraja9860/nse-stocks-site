@@ -2,31 +2,22 @@ name: Update Stocks CSV
 
 on:
   schedule:
-    - cron: "0 6 * * *"   # every day at 6 AM IST
+    - cron: "0 10 * * *"   # every day at 6 AM IST
   workflow_dispatch:
 
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-
-      - name: Install dependencies
-        run: pip install requests
-
-      - name: Run update script
-        run: python scripts/update_csv.py
-
-      - name: Commit changes
-        run: |
+      - run: pip install requests
+      - run: python scripts/update_csv.py
+      - run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
           git add stocks.csv
-          git commit -m "Auto-update stocks.csv" || echo "No changes to commit"
+          git commit -m "Auto-update stocks.csv" || echo "No changes"
           git push
