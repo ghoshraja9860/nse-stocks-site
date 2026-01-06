@@ -1,4 +1,4 @@
-﻿date,symbol,stocks,cmp,dRSI,wRSI,mRSI,sector,ema20,ema50,latestChange,weeklyChange,monthlyChange
+Date,Symbol,Stocks,Cmp,Drsi,Wrsi,Mrsi,Sector,Ema20,Ema50,Latest change,Weekly change,Monthly change
 "6th Jan","NTPCGREEN","NTPCGREEN","93.95","50.57","42.03","33.84","power & utilities","93.66","95.11","-2.15","-3.25","-0.635"
 "6th Jan","NIVABUPA","NIVABUPA","74.79","46.63","42.96","49.58","financials","75.21","75.94","-0.240","-0.492","-0.809"
 "6th Jan","ACMESOLAR","ACMESOLAR","230.76","44.19","42.87","42.27","realty","234.42","242.68","-3.30","-4.04","-2.83"
@@ -494,4 +494,3 @@
 "6th Jan","ARE&M","ARE&M","919.50","43.70","36.55","45.46","auto","926.33","945.28","-0.686","-0.948","1.09"
 "6th Jan","AEGISLOG","AEGISLOG","746.20","53.64","48.56","55.60","services","733.52","748.52","1.93","2.76","3.99"
 "6th Jan","ABB","ABB","5224.50","54.88","47.05","46.87","industrials","5179.72","5176.52","1.08","0.365","1.05"
-
