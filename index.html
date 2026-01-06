@@ -4,10 +4,18 @@
   <meta charset="UTF-8">
   <title>NSE Stock Screener</title>
   <style>
-    body { font-family: Arial; padding: 20px; }
-    .controls { margin-bottom: 20px; }
+    body { font-family: Arial; margin: 0; padding: 0; }
+    header {
+      background: linear-gradient(to right, #004d99, #00b3b3);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 { margin: 0; font-size: 28px; }
+    header p { margin: 5px 0 0; font-size: 16px; }
+    .controls { margin: 20px; }
     .stock-card {
-      width: 220px;
+      width: 240px;
       margin: 10px;
       padding: 15px;
       border-radius: 10px;
@@ -23,11 +31,27 @@
     .sideways { background: linear-gradient(to bottom right, #fff3c2, #ffe999); border-left: 6px solid orange; }
     .stock-card h3 { margin: 0 0 8px; }
     .stock-card p { margin: 4px 0; font-size: 14px; }
+    .tradingview-link {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 10px;
+      background: #004d99;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 13px;
+    }
+    .tradingview-link:hover { background: #007acc; }
   </style>
 </head>
 <body>
-  <h1>NSE Stock Trend</h1>
+  <!-- Banner -->
+  <header>
+    <h1>AGNI Trading Channel</h1>
+    <p>Smart NSE Stock Screener | RSI + Trend Analysis | Powered by TradingView</p>
+  </header>
 
+  <!-- Filters -->
   <div class="controls">
     <label for="filter">Sector:</label>
     <select id="filter">
@@ -57,6 +81,7 @@
     </select>
   </div>
 
+  <!-- Stock Cards -->
   <div id="stocksContainer"></div>
 
   <script>
@@ -93,6 +118,9 @@
             <h3>${symbol}</h3>
             <p><strong>${signalText}</strong></p>
             <p>Sector: ${sector}</p>
+            <a class="tradingview-link" href="https://www.tradingview.com/symbols/NSE-${symbol}/" target="_blank">
+              View on TradingView
+            </a>
           `;
           container.appendChild(card);
         });
