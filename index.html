@@ -135,7 +135,12 @@
           const cols = row.split(',').map(c => c.replace(/(^"|"$)/g,'').trim());
           if (cols.length < 13) return;
 
-          const [, symbol, , cmp, dRSI, wRSI, mRSI, sector, , , dailyChange, weeklyChange, monthlyChange] = cols;
+          const [
+            date, symbol, stocks, cmp,
+            dRSI, wRSI, mRSI,
+            sector, ema20, ema50,
+            latestChange, weeklyChange, monthlyChange
+          ] = cols;
 
           const avgRSI = ((parseFloat(mRSI) + parseFloat(wRSI) + parseFloat(dRSI)) / 3).toFixed(1);
 
@@ -164,7 +169,7 @@
             </a>
             <div class="details">
               <p>CMP: ${cmp}</p>
-              <p>% Daily Change: ${formatChange(dailyChange)}</p>
+              <p>% Latest Change: ${formatChange(latestChange)}</p>
               <p>% Weekly Change: ${formatChange(weeklyChange)}</p>
               <p>% Monthly Change: ${formatChange(monthlyChange)}</p>
               <p>Daily RSI: ${dRSI}</p>
@@ -184,4 +189,4 @@
       }
 
       filterSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
-      signalSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
+      signalSelect.addEventListener("
