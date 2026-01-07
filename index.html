@@ -203,18 +203,30 @@
 
         // sector summary table
         const sectorSummaryDiv = document.getElementById("sectorSummary");
-        sectorSummaryDiv.innerHTML = "<h3>Sector-wise Counts</h3><table><tr><th>Sector</th><th>Bullish</th><th>Bearish</th><th>Sideways</th></tr>";
-        for (const [sec, counts] of Object.entries(sectorCounts)) {
-          sectorSummaryDiv.innerHTML += `
-            <tr>
-              <td>${sec}</td>
-              <td class="bullish-cell">${counts.bullish}</td>
-              <td class="bearish-cell">${counts.bearish}</td>
-              <td class="sideways-cell">${counts.sideways}</td>
-            </tr>
-          `;
-        }
-        sectorSummaryDiv.innerHTML += "</table>";
+        sectorSummaryDiv.innerHTML = `
+          <h3>Sector-wise Counts</h3>
+          <table>
+          <thead>
+          <tr>
+          <th>Sector</th>
+          <th>Bullish</th>
+          <th>Bearish</th>
+          <th>Sideways</th>
+       </tr>
+       </thead>
+       <tbody>
+      ${Object.entries(sectorCounts).map(([sec, counts]) => `
+        <tr>
+          <td>${sec}</td>
+          <td class="bullish-cell">${counts.bullish}</td>
+          <td class="bearish-cell">${counts.bearish}</td>
+          <td class="sideways-cell">${counts.sideways}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+`;
+
       }
 
       filterSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
