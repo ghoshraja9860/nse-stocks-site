@@ -105,6 +105,8 @@
   <div class="summary" id="summaryCounts">
     Bullish: 0 | Bearish: 0 | Sideways: 0
   </div>
+  <div class="summary" id="sectorSummary"></div>
+
 
   <div id="stocksContainer"></div>
 
@@ -183,6 +185,22 @@
 
         summaryDiv.textContent = `Bullish: ${bullishCount} | Bearish: ${bearishCount} | Sideways: ${sidewaysCount}`;
       }
+      // sector summary output
+      const sectorSummaryDiv = document.getElementById("sectorSummary");
+      sectorSummaryDiv.innerHTML = "<h3>Sector-wise Counts</h3><table border='1' cellpadding='5'><tr><th>Sector</th><th>Bullish</th><th>Bearish</th><th>Sideways</th></tr>";
+
+     for (const [sec, counts] of Object.entries(sectorCounts)) {
+      sectorSummaryDiv.innerHTML += `
+       <tr>
+        <td>${sec}</td>
+        <td>${counts.bullish}</td>
+        <td>${counts.bearish}</td>
+        <td>${counts.sideways}</td>
+      </tr>
+    `;
+}
+    sectorSummaryDiv.innerHTML += "</table>";
+
 
       filterSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
       signalSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
