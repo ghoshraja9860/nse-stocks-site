@@ -1,4 +1,5 @@
 Stock,Cmp,DailyRSI,WeeklyRSI,onthlyRSI,sector,Ema20,Ema50,%Daily,%Weekly,%Monthly
+Date,symbol,stocks,cmp,dRSI,wRSI,mRSI,sector,ema20,ema50,latestChange,weeklyChange,monthlyChange
 EIEL	200.86	41.39	39.76	49.18	realty	205.28	214.92	-0.913	-2.85	-2.45
 NTPCGREEN	93.95	50.57	42.03	33.84	power & utilities	93.66	95.11	-2.15	-3.25	-0.635
 BLACKBUCK	684.5	57.92	60.25	80.55	transportation	666.08	656.14	-1.97	-2.09	0.699
