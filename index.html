@@ -61,12 +61,28 @@
       font-size: 13px;
     }
     .tradingview-link:hover { background: #007acc; }
+
+    /* sector summary table styling */
+    #sectorSummary table {
+      border-collapse: collapse;
+      margin-top: 10px;
+      width: 90%;
+    }
+    #sectorSummary th, #sectorSummary td {
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      text-align: center;
+    }
+    #sectorSummary th { background: #f0f0f0; }
+    .bullish-cell { background: #d4fdd4; color: green; font-weight: bold; }
+    .bearish-cell { background: #ffd6d6; color: red; font-weight: bold; }
+    .sideways-cell { background: #fff3c2; color: orange; font-weight: bold; }
   </style>
 </head>
 <body>
   <header>
     <h1>TRADING WITH AGNI</h1>
-    <p>Smart NSE Stock Screener | RSI + Trend Analysis | EOD chart only |Powered by TradingView</p>
+    <p>Smart NSE Stock Screener | RSI + Trend Analysis | EOD chart only | Powered by TradingView</p>
     <div class="banner-links">
       <a href="https://youtube.com/@technofundatraders?si=1WdULL8y4w4aMz73" target="_blank">📺 YouTube</a>
       <a href="https://t.me/technofundatrader" target="_blank">📢 Telegram</a>
@@ -107,7 +123,6 @@
   </div>
   <div class="summary" id="sectorSummary"></div>
 
-
   <div id="stocksContainer"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
@@ -126,26 +141,26 @@
       function render(sectorFilter, signalFilter) {
         container.innerHTML = "";
         let bullishCount = 0, bearishCount = 0, sidewaysCount = 0;
+        const sectorCounts = {};
 
         rows.forEach(row => {
           const { symbol, cmp, dRSI, wRSI, mRSI, sector, ema20, latestChange, weeklyChange, monthlyChange } = row;
           if (!symbol) return;
 
           let signalClass, signalText;
-
           if (parseFloat(mRSI) > 60 && parseFloat(wRSI) > 60 && parseFloat(dRSI) > 60) {
-            signalClass = "bullish";
-            signalText = "Bullish";
-            bullishCount++;
+            signalClass = "bullish"; signalText = "Bullish"; bullishCount++;
           } else if (parseFloat(mRSI) < 40 && parseFloat(wRSI) < 40 && parseFloat(dRSI) < 40) {
-            signalClass = "bearish";
-            signalText = "Bearish";
-            bearishCount++;
+            signalClass = "bearish"; signalText = "Bearish"; bearishCount++;
           } else {
-            signalClass = "sideways";
-            signalText = "Sideways";
-            sidewaysCount++;
+            signalClass = "sideways"; signalText = "Sideways"; sidewaysCount++;
           }
+
+          // sector tally
+          if (!sectorCounts[sector]) {
+            sectorCounts[sector] = { bullish: 0, bearish: 0, sideways: 0 };
+          }
+          sectorCounts[sector][signalClass]++;
 
           if (sectorFilter !== "all" && sector.toLowerCase() !== sectorFilter.toLowerCase()) return;
           if (signalFilter !== "all" && signalClass !== signalFilter) return;
@@ -183,31 +198,31 @@
           container.appendChild(card);
         });
 
+        // overall counts
         summaryDiv.textContent = `Bullish: ${bullishCount} | Bearish: ${bearishCount} | Sideways: ${sidewaysCount}`;
+
+        // sector summary table
+        const sectorSummaryDiv = document.getElementById("sectorSummary");
+        sectorSummaryDiv.innerHTML = "<h3>Sector-wise Counts</h3><table><tr><th>Sector</th><th>Bullish</th><th>Bearish</th><th>Sideways</th></tr>";
+        for (const [sec, counts] of Object.entries(sectorCounts)) {
+          sectorSummaryDiv.innerHTML += `
+            <tr>
+              <td>${sec}</td>
+              <td class="bullish-cell">${counts.bullish}</td>
+              <td class="bearish-cell">${counts.bearish}</td>
+              <td class="sideways-cell">${counts.sideways}</td>
+            </tr>
+          `;
+        }
+        sectorSummaryDiv.innerHTML += "</table>";
       }
-      // sector summary output
-      const sectorSummaryDiv = document.getElementById("sectorSummary");
-      sectorSummaryDiv.innerHTML = "<h3>Sector-wise Counts</h3><table border='1' cellpadding='5'><tr><th>Sector</th><th>Bullish</th><th>Bearish</th><th>Sideways</th></tr>";
-
-     for (const [sec, counts] of Object.entries(sectorCounts)) {
-      sectorSummaryDiv.innerHTML += `
-       <tr>
-        <td>${sec}</td>
-        <td>${counts.bullish}</td>
-        <td>${counts.bearish}</td>
-        <td>${counts.sideways}</td>
-      </tr>
-    `;
-}
-    sectorSummaryDiv.innerHTML += "</table>";
-
 
       filterSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
       signalSelect.addEventListener("change", () => render(filterSelect.value, signalSelect.value));
 
       render("all", "all");
     }
-   
+
     // run loader
     loadCSV();
   </script>
