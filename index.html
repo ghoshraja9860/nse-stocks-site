@@ -65,7 +65,7 @@
 </head>
 <body>
   <header>
-    <h1>AGNI Trading Channel</h1>
+    <h1>TRADING WITH AGNI</h1>
     <p>Smart NSE Stock Screener | RSI + Trend Analysis | EOD chart only |Powered by TradingView</p>
     <div class="banner-links">
       <a href="https://youtube.com/@technofundatraders?si=1WdULL8y4w4aMz73" target="_blank">📺 YouTube</a>
@@ -126,7 +126,7 @@
         let bullishCount = 0, bearishCount = 0, sidewaysCount = 0;
 
         rows.forEach(row => {
-          const { symbol, cmp, dRSI, wRSI, mRSI, sector, latestChange, weeklyChange, monthlyChange } = row;
+          const { symbol, cmp, dRSI, wRSI, mRSI, sector, ema20, latestChange, weeklyChange, monthlyChange } = row;
           if (!symbol) return;
 
           let signalClass, signalText;
@@ -168,6 +168,7 @@
               <p>Daily RSI: ${dRSI}</p>
               <p>Weekly RSI: ${wRSI}</p>
               <p>Monthly RSI: ${mRSI}</p>
+              <p>EMA20: ${ema20}</p>
               <a class="tradingview-link" href="https://www.tradingview.com/symbols/NSE-${symbol}/" target="_blank">
                 Open Full Chart
               </a>
