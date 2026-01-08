@@ -148,7 +148,7 @@
           if (!symbol) return;
 
           let signalClass, signalText;
-          if (parseFloat(mRSI) > 60 && parseFloat(wRSI) > 60 && parseFloat(dRSI) > 60) {
+          if (parseFloat(mRSI) > 60 && parseFloat(wRSI) > 60 && parseFloat(dRSI) > 60 && parseFloat(mRSI) < 80 && parseFloat(wRSI) < 80 && parseFloat(dRSI) < 75) {
             signalClass = "bullish"; signalText = "Bullish"; bullishCount++;
           } else if (parseFloat(mRSI) < 40 && parseFloat(wRSI) < 40 && parseFloat(dRSI) < 40) {
             signalClass = "bearish"; signalText = "Bearish"; bearishCount++;
