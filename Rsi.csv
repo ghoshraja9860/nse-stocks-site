@@ -1,4 +1,4 @@
-﻿Date,Symbol,Stocks,Cmp,Drsi,Wrsi,Mrsi,Sector,Ema20,Ema50,Daily change,Weekly change,Monthly change
+Date,symbol,stocks,cmp,dRSI,wRSI,mRSI,sector,ema20,ema50,latestChange,weeklyChange,monthlyChange
 "28th Jan","NTPCGREEN","NTPCGREEN","93.57","54.59","44.21","33.70","power & utilities","91.92","93.52","3.90","3.62","-1.04"
 "28th Jan","NIVABUPA","NIVABUPA","77.01","51.28","47.96","51.13","financials","77.00","76.70","0.169","0.013","2.14"
 "28th Jan","ACMESOLAR","ACMESOLAR","216.36","45.13","41.56","40.22","realty","218.53","230.84","4.42","8.75","-8.90"
@@ -493,4 +493,5 @@
 "28th Jan","ATUL","ATUL","6149","57.16","50.48","45.69","chemicals","5967.89","5987.72","5.30","5.54","0.130"
 "28th Jan","ARE&M","ARE&M","841.65","29.30","27.92","41.28","auto","876.27","911.22","1.64","1.26","-7.47"
 "28th Jan","AEGISLOG","AEGISLOG","705.45","48.43","45.30","52.58","services","702.31","726.97","5.61","8.31","-1.69"
+
 "28th Jan","ABB","ABB","5043.50","53.22","45.21","44.85","industrials","4941.49","5052.65","7.14","7.43","-2.45"
